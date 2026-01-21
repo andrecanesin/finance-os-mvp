@@ -2,9 +2,9 @@ from typing import Dict, Any
 from datetime import datetime
 # Tenta importar para testes diretos e para uso como módulo
 try:
-    from .db import execute_insert, execute_query
-    from .dates import get_week_start, get_week_end
-    from .ledger import get_account_balance
+    from db import execute_insert, execute_query
+    from dates import get_week_start, get_week_end
+    from ledger import get_account_balance
 except ImportError:
     import db
     import dates
