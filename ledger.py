@@ -2,7 +2,7 @@ import sqlite3
 from typing import List, Dict, Any, Optional
 from datetime import datetime
 try:
-    from .db import execute_insert, execute_query, get_db_connection, execute_many_atomic
+    from db import execute_insert, execute_query, get_db_connection, execute_many_atomic
 except ImportError:
     # Para execução direta do módulo (testes)
     import db
