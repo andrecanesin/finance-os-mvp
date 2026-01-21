@@ -2,11 +2,11 @@ from typing import Dict
 from datetime import datetime, timedelta
 # Tenta importar para testes diretos e para uso como módulo
 try:
-    from .db import execute_query
-    from .ledger import get_total_cash
-    from .planned import get_fixed_for_period, generate_fixed_events
-    from .kpis import get_weekly_variable_expenses
-    from .dates import get_week_start, get_week_end
+    from db import execute_query
+    from ledger import get_total_cash
+    from planned import get_fixed_for_period, generate_fixed_events
+    from kpis import get_weekly_variable_expenses
+    from dates import get_week_start, get_week_end
 except ImportError:
     import db
     import ledger
