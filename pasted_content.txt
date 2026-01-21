@@ -1,0 +1,182 @@
+Você agora deve evoluir o projeto Finance-OS para a implementação do CORE funcional em Python,
+sem interface gráfica (sem Streamlit ainda).
+
+CONTEXTO
+Já existe um documento de design técnico aprovado com:
+- arquitetura monolítica simples
+- SQLite como persistência
+- método human-in-the-loop
+- semana financeira SEGUNDA → DOMINGO
+- separação PF / PJ
+- conceito de conta operacional
+- reconciliação semanal NÃO bloqueante
+
+OBJETIVO DESTE PROMPT
+Implementar a camada CORE (lógica de negócio + persistência),
+com código limpo, testável e desacoplado da UI.
+
+NÃO IMPLEMENTAR:
+- Streamlit
+- HTML/CSS
+- Docker
+- Autenticação
+- Classificação automática
+- Bloqueios rígidos de reconciliação
+
+FOCAR EM:
+- funções puras
+- clareza
+- previsibilidade
+- explicações no código
+
+---
+
+## 1️⃣ Persistência (SQLite)
+
+Implemente um módulo de banco com:
+- Criação automática do banco se não existir
+- Conexão simples (sqlite3)
+- Schema inicial
+
+Tabelas obrigatórias:
+
+### accounts
+- id (PK)
+- name
+- type (PF | PJ)
+- role (operacional | cofre)
+- active (bool)
+
+### transactions
+- id (PK)
+- date (YYYY-MM-DD)
+- amount (REAL, sempre positivo)
+- transaction_type (income | expense | transfer)
+- account_id (FK)
+- category
+- description
+- method (PIX | boleto | debito | cartao | outro)
+
+### planned_fixed
+- id (PK)
+- name
+- amount
+- frequency (monthly)
+- due_day (1–31)
+- account_id
+- category
+- active
+
+### reconciliations
+- id (PK)
+- week_start (YYYY-MM-DD)
+- account_id
+- real_balance
+- computed_balance
+- delta
+- notes
+
+---
+
+## 2️⃣ Funções centrais (obrigatórias)
+
+Implemente funções Python (com docstrings claras):
+
+### Datas / Semana
+- get_week_start(date) → retorna segunda-feira
+- get_week_end(date) → retorna domingo
+- is_date_in_week(date, week_start)
+
+### Ledger
+- add_transaction(...)
+- list_transactions(filters)
+- get_account_balance(account_id, until_date=None)
+
+### KPIs
+- get_weekly_variable_expenses(
+    week_start,
+    operational_account_id
+  )
+  Regra:
+  - somar somente:
+    - transaction_type = expense
+    - conta operacional
+    - datas dentro da semana
+  - excluir transfers
+
+- get_total_cash()
+  - soma saldos computados de todas as contas
+
+### Planejado
+- list_active_fixed()
+- get_fixed_for_period(start_date, end_date)
+
+### Forecast (simples)
+- forecast_cash_flow(days=30)
+  - saldo atual
+  - menos fixos planejados
+  - menos média semanal de variáveis (últimas 4 semanas)
+
+### Reconciliação
+- reconcile_account(
+    week_start,
+    account_id,
+    real_balance
+  )
+  - calcular computed_balance
+  - calcular delta
+  - salvar reconciliação
+  - NÃO bloquear o sistema
+  - NÃO corrigir dados automaticamente
+
+---
+
+## 3️⃣ Regras de negócio IMPORTANTES
+
+- Transferências:
+  - NÃO entram em KPIs
+  - NÃO afetam teto semanal
+  - Apenas movem saldo entre contas
+
+- Reconciliação:
+  - É um ponto de verdade humano
+  - Diferença (delta) é informativa, não erro automático
+
+- Sistema deve funcionar mesmo sem reconciliação recente
+  (apenas mostrar avisos no futuro)
+
+---
+
+## 4️⃣ Qualidade do código
+
+- Código organizado em módulos:
+  - db.py
+  - models.py (opcional)
+  - ledger.py
+  - kpis.py
+  - forecast.py
+  - reconciliation.py
+  - dates.py
+- Comentários explicando decisões importantes
+- Sem overengineering
+
+---
+
+## 5️⃣ Entregáveis esperados
+
+- Código Python funcional
+- Banco SQLite inicializável
+- Exemplos de uso no final de cada módulo
+- Explicação textual curta:
+  “Como este core será usado pela UI Streamlit no próximo passo”
+
+---
+
+## TOM DE RESPOSTA
+- Técnico
+- Didático
+- Sem floreios
+- Pensando em produto vendável
+
+Este core será a base de um sistema financeiro pessoal focado em segurança psicológica,
+previsibilidade e autonomia do usuário.
