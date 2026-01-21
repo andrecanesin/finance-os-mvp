@@ -2,7 +2,7 @@ from typing import List, Dict, Any
 from datetime import datetime, timedelta
 # Tenta importar para testes diretos e para uso como módulo
 try:
-    from .db import execute_query
+    from db import execute_query
 except ImportError:
     import db
     execute_query = db.execute_query
