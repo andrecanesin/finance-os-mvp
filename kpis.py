@@ -1,13 +1,13 @@
 from typing import Dict
 from datetime import datetime
-from .dates import get_week_end, get_current_week_range
-from .ledger import get_account_balance
+from dates import get_week_end, get_current_week_range
+from ledger import get_account_balance
 
 # Tenta importar para testes diretos e para uso como módulo
 try:
-    from .db import execute_query
-    from .dates import get_week_end, get_current_week_range
-    from .ledger import get_account_balance
+    from db import execute_query
+    from dates import get_week_end, get_current_week_range
+    from ledger import get_account_balance
 except ImportError:
     import db
     import dates
