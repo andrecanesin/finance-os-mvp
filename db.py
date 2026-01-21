@@ -1,28 +1,16 @@
+import os
 import sqlite3
 from typing import List, Tuple
 
-DATABASE_NAME = "/home/ubuntu/finance_os_core/finance_os.db"
+# Em Streamlit Cloud, /tmp é gravável. Para outros ambientes, você pode sobrescrever via env.
+DATABASE_NAME = os.getenv("FINANCEOS_DB_PATH", "/tmp/finance_os.db")
 
 def get_db_connection():
     """Retorna uma conexão com o banco de dados SQLite."""
     conn = sqlite3.connect(DATABASE_NAME)
-    conn.row_factory = sqlite3.Row # Permite acessar colunas por nome
+    conn.row_factory = sqlite3.Row  # Permite acessar colunas por nome
     return conn
 
-def initialize_db():
-    """Cria as tabelas do schema se elas não existirem."""
-    conn = get_db_connection()
-    cursor = conn.cursor()
-
-    # Tabela de Contas
-    cursor.execute("""
-        CREATE TABLE IF NOT EXISTS accounts (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            name TEXT NOT NULL,
-            type TEXT NOT NULL CHECK(type IN ('PF', 'PJ')),
-            role TEXT NOT NULL CHECK(role IN ('operacional', 'cofre')),
-            active BOOLEAN NOT NULL DEFAULT 1
-        );
     """)
 
     # Tabela de Transações
