@@ -76,6 +76,19 @@ def initialize_db() -> None:
         );
     """)
 
+    # Tabela de Configurações (chave-valor)
+    cursor.execute("""
+        CREATE TABLE IF NOT EXISTS settings (
+            key TEXT PRIMARY KEY,
+            value TEXT NOT NULL
+        );
+    """)
+
+    # Defaults (não sobrescreve se já existir)
+    cursor.execute("INSERT OR IGNORE INTO settings (key, value) VALUES ('weekly_budget', '450');")
+    cursor.execute("INSERT OR IGNORE INTO settings (key, value) VALUES ('operational_account_id', '');")
+
+    
     conn.commit()
     conn.close()
 
