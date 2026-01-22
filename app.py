@@ -390,12 +390,9 @@ elif page == "Configurações":
         
         if st.button("Salvar Teto Semanal", type="primary"):
             try:
-                # Atualizar ou inserir
-                db.execute_query(
-                    "DELETE FROM settings WHERE key = 'weekly_cap_amount'"
-                )
                 db.execute_insert(
-                    "INSERT INTO settings (key, value) VALUES (?, ?)",
+                    "INSERT INTO settings (key, value) VALUES (?, ?) "
+                    "ON CONFLICT(key) DO UPDATE SET value=excluded.value",
                     ("weekly_cap_amount", str(new_cap))
                 )
                 st.success("✅ Teto semanal atualizado com sucesso!")
