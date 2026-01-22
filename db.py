@@ -85,7 +85,7 @@ def initialize_db() -> None:
     """)
 
     # Defaults (não sobrescreve se já existir)
-    cursor.execute("INSERT OR IGNORE INTO settings (key, value) VALUES ('weekly_budget', '450');")
+    cursor.execute("INSERT OR IGNORE INTO settings (key, value) VALUES ('weekly_cap_amount', '450');")
     cursor.execute("INSERT OR IGNORE INTO settings (key, value) VALUES ('operational_account_id', '');")
 
     
